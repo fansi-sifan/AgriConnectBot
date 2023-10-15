@@ -92,7 +92,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
       if (searchResult) {
         // response = searchResult.name;
         response = await summarizeText(searchResult.pageContent);
-        // console.log(searchResult.metadata)
+        console.log(searchResult)
       } else {
         response = "No results found for your search.";
       }

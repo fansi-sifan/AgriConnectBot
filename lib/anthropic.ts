@@ -8,7 +8,7 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const generalContext = `You are a helpful expert at Agriculture for farmers in India. 
 Please provide your expert agriculture advice based on user context. 
-Always answer the questions in the same languages that the user use. When unsure, use English.`
+Always answer the questions in the same languages user asks. When unsure, use English.`
 
 export async function createCompletions(query: string): Promise<string> {
   const anthropic = new Anthropic({

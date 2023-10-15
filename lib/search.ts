@@ -8,7 +8,7 @@ import { createClient } from "@supabase/supabase-js";
 
 
 // const jsonFilePath = path.resolve(__dirname, '../data/scheme_data.json');
-// const jsonFilePath = path.resolve(__dirname, '../data/rice_data.json');
+// // const jsonFilePath = path.resolve(__dirname, '../data/rice_data.json');
 // const data = JSON.parse(fs.readFileSync(jsonFilePath, { encoding: 'utf-8' }));
 
 // let pageContent: string[] = [];
