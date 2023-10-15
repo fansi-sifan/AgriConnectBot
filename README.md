@@ -17,6 +17,25 @@ This repository hosts the codebase and resources for Agriconnect. The project al
 - **Interactive Local Language Content:** Knowledge institutions can convert their expertise into locally relevant content, breaking down language barriers.
 - **Promoting Sustainability:** Agriconnect contributes to reducing environmental strain, combating resource-intensive farming, and fostering sustainable livelihoods for smallholder farmers.
 
+## Tech Stack
+
+AI models: 
+- OpenAI whisper-1
+- Anthropic claude-instant-1
+- ElevenLabs: eleven_multilingual_v2
+- Llava 13b
+
+AI dev tools: 
+- Supabase: vector database for RAG
+- Replicate: Used for generating images
+- Humanloop: prompt management and quality evaluation
+
+Infrastructure
+- Node.js
+- TypeScript
+- Langchain
+- Telegram Bot API
+
 ## Getting Started
 
 To get started with Agriconnect, follow the installation and usage instructions in our [documentation](link-to-documentation).
