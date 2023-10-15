@@ -3,21 +3,21 @@ import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
 // import { SupabaseHybridSearch } from "langchain/retrievers/supabase";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { createClient } from "@supabase/supabase-js";
-import fs from 'fs';
-import path from 'path';
+// import fs from 'fs';
+// import path from 'path';
 
 
 // const jsonFilePath = path.resolve(__dirname, '../data/scheme_data.json');
-const jsonFilePath = path.resolve(__dirname, '../data/rice_data.json');
-const data = JSON.parse(fs.readFileSync(jsonFilePath, { encoding: 'utf-8' }));
+// const jsonFilePath = path.resolve(__dirname, '../data/rice_data.json');
+// const data = JSON.parse(fs.readFileSync(jsonFilePath, { encoding: 'utf-8' }));
 
-let pageContent: string[] = [];
-let metadata: object[] = [];
+// let pageContent: string[] = [];
+// let metadata: object[] = [];
 
-for (let item of data) {
-  pageContent.push(item.pageContent); // Save the 'pageContent' of the current object
-  metadata.push(item.metadata); // Save the 'metadata' of the current object
-}
+// for (let item of data) {
+//   pageContent.push(item.pageContent); // Save the 'pageContent' of the current object
+//   metadata.push(item.metadata); // Save the 'metadata' of the current object
+// }
 
 // First, follow set-up instructions at
 // https://js.langchain.com/docs/modules/indexes/vector_stores/integrations/supabase
@@ -34,10 +34,10 @@ export async function search(query: string)  {
 
     const client = createClient(url, privateKey);
 
-    // const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-    const vectorStore = await SupabaseVectorStore.fromTexts(
-      pageContent,
-      metadata,
+    const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+    // const vectorStore = await SupabaseVectorStore.fromTexts(
+    //   pageContent,
+    //   metadata,
       // ['Hello world', 'Bye bye', "What's this?"],
       // [{ id: 2 }, { id: 1 }, { id: 3 }],
       new OpenAIEmbeddings(),
