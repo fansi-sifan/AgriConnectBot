@@ -55,9 +55,9 @@ export async function followUp(context: string) {
   return completion;
 }
 
-export async function summarizeText(context: string) {
+export async function summarizeText(query: string, context: string) {
 
-  const sum_prompt = `Summarise the technical content, no more than 5 sentences. ${context}`;
+  const sum_prompt = `User asks ${query}. Using the following context to answer in his language, with no more than 5 sentences. Context: ${context}`;
   
   const prompt = `${Anthropic.HUMAN_PROMPT} ${sum_prompt}${Anthropic.AI_PROMPT}`;
 

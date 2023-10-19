@@ -86,7 +86,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
       const query = currentMessage.slice('/search '.length);
       searchResult = await search(query);
       if (searchResult) {
-        response = await summarizeText(searchResult.pageContent);
+        response = await summarizeText(query, searchResult.pageContent);
         console.log(searchResult)
        
       } else {
