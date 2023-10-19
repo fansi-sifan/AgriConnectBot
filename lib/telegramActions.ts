@@ -57,10 +57,11 @@ export async function followUp(context: string) {
 
 export async function summarizeText(query: string, context: string) {
 
-  const sum_prompt = `user question: ${query}. 
-  Using the following context to answer in the same language as user question, with no more than 5 sentences. 
-  
-  Context: ${context}`;
+  const sum_prompt = `This is an external knowledge source for you:  
+  <context> ${context} </context>
+
+  Answer the user question in English with no more than 5 sentences.
+  <question> ${query}. </question>.`;
   
   const prompt = `${Anthropic.HUMAN_PROMPT} ${sum_prompt}${Anthropic.AI_PROMPT}`;
 
