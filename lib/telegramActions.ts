@@ -17,17 +17,6 @@ interface ChatMessage {
 import { createCompletions } from "./anthropic"
 import { createCompletionsHL } from "./humanloop";
 
-
-export async function createIntro(keywords: string) {
-  const intro_prompt = `Responding to user: ${keywords} . 
-  If he asks an agriculture related questions, answer it. 
-  If not, greet him in his language, asks him to provide information about where his land is, and what crops he grow, and suggest what questions he can ask`;
-  const prompt = `${Anthropic.HUMAN_PROMPT} ${intro_prompt}${Anthropic.AI_PROMPT}`;
- 
-  const completion = await createCompletions(prompt);
-  return completion;
-}
-
 export async function continueChat(userChatHistory: ChatMessage[]) {
   
   let chatString = ""

@@ -1,3 +1,5 @@
+import { search } from "./search";
+
 export async function createSupabaseConnection() {
   const { createClient } = await import("@supabase/supabase-js");
   const supabaseUrl = process.env.SUPABASE_URL || "";
@@ -38,7 +40,32 @@ export async function getStoryStart(supabase: any, user_id: string) {
   return data;
 }
 
-export async function updateStoryStart(supabase: any, user_id: string) {
+export async function getLastResponse(supabase: any, user_id: string) {
+  const { data, error } = await supabase
+    .from("agri_users")
+    .select()
+    .eq("user_id", user_id)
+    .eq("sender", "bot")
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) console.error(error);
+  return data;
+}
+
+export async function getSearchResult(supabase: any, user_id: string) {
+  const { data, error } = await supabase
+    .from("agri_users")
+    .select()
+    .eq("user_id", user_id)
+    .eq("sender", "search")
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) console.error(error);
+  return data;
+  
+}
+
+export async function updateConsent(supabase: any, user_id: string) {
   const { data, error } = await supabase
     .from("agri_chats")
     .update({ firstmessagesent: true })
@@ -47,7 +74,7 @@ export async function updateStoryStart(supabase: any, user_id: string) {
   return data;
 }
 
-export async function createStoryStart(supabase: any, user_id: string) {
+export async function createConsent(supabase: any, user_id: string) {
   const { data, error } = await supabase
     .from("agri_chats")
     .insert([{ user_id, firstmessagesent: false }]);

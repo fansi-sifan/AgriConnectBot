@@ -14,9 +14,18 @@ bot.on("message", async (message: Message) => {
   await handleIncomingMessage(bot, message);
 });
 
+
+bot.on("callback_query", async (query: any) => {
+  const { handleCallback } = require("./lib/telegram");
+  await handleCallback(bot, query);
+});
+
+
 const app = express();
 
 // Start the Express.js server
 app.listen(port, () => {
   console.log("Express server started on port 3000");
 });
+
+

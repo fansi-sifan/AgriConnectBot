@@ -1,13 +1,15 @@
 import { Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery } from "node-telegram-bot-api";
-import { createIntro, continueChat, followUp, summarizeText } from "./telegramActions";
+import { continueChat, followUp, summarizeText } from "./telegramActions";
 import {
   createSupabaseConnection,
   storeMessage,
   getChatHistory,
   getStoryStart,
-  updateStoryStart,
-  createStoryStart,
+  updateConsent,
+  createConsent,
   reset,
+  getSearchResult,
+  getLastResponse,
 } from "./supabase";
 import { createOpenAIConnection } from "./openai";
 import { transcribe } from "./voice";
@@ -30,6 +32,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
   //check if user has an active story
   const user_id = String(message.chat.id);
   const supabase = await createSupabaseConnection();
+  const story = await getStoryStart(supabase, user_id);
 
   if (message.text === "/reset") {
     await reset(supabase, user_id);
@@ -60,8 +63,6 @@ async function handleIncomingMessage(bot: any, message: Message) {
     currentMessage = message.text;
   }
 
-  const story = await getStoryStart(supabase, user_id);
-
   let storeUserMessage = true;
   let response: string;
   let searchResult: any;
@@ -70,19 +71,14 @@ async function handleIncomingMessage(bot: any, message: Message) {
   if (story.length === 0) {
     console.log("New user");
     bot.sendMessage(message.chat.id, "Hi, I'm AgriConnect. 🧑🏽‍🌾️");
+    bot.sendMessage(message.chat.id, "PLACE HOLDER: data consent");
+    bot.sendMessage(message.chat.id, "Reply OK to continue");
     storeUserMessage = false;
-    await createStoryStart(supabase, user_id);
-  // } else if (story.length > 0 && story[0].firstmessagesent === false) {
-  //   console.log("Send intro");
-  //   //get the intro and send to user
-  //   response = await createIntro(currentMessage || "");
-  //   await updateStoryStart(supabase, user_id);
-
-    //render image
-    // const { generateImage } = require("./imgGen");
-    // const img = await generateImage(response);
-    // bot.sendPhoto(message.chat.id, img[0]);
-
+    await createConsent(supabase, user_id);
+  } else if (story.length > 0 && story[0].firstmessagesent === false) {
+    console.log("Send Consent");
+    bot.sendMessage(message.chat.id, "Let's get started!");
+    await updateConsent(supabase, user_id);
   } else {
 
     if (currentMessage.startsWith("/search")) {
@@ -90,9 +86,9 @@ async function handleIncomingMessage(bot: any, message: Message) {
       const query = currentMessage.slice('/search '.length);
       searchResult = await search(query);
       if (searchResult) {
-        // response = searchResult.name;
         response = await summarizeText(searchResult.pageContent);
         console.log(searchResult)
+       
       } else {
         response = "No results found for your search.";
       }
@@ -142,49 +138,60 @@ async function handleIncomingMessage(bot: any, message: Message) {
     });
   });
 
-// Handle button clicks
-bot.on('callback_query', async (callbackQuery: CallbackQuery) => {
-  if (callbackQuery.message) {
-    const message = callbackQuery.message;
-    const chatId = message.chat.id;
-
-    if (callbackQuery.data === 'REQUEST_AUDIO') {
-        // Make a request to the ElevenLabs API
-        const audio_response = await generateAudio(response);
-        console.log('generate audio')
-        // Send the audio file to the user
-        bot.sendVoice(chatId, audio_response);
-    } else if (callbackQuery.data === 'REQUEST_SOURCE') {
-        // Handle source request
-        // console.log(searchResult.metadata)
-        const source_response = searchResult.link;
-        console.log('search source')
-        // Send the source information to the user
-        bot.sendMessage(chatId, source_response);
-    } else if (callbackQuery.data === 'FOLLOW_UP') {
-      // Handle source request
-      const follow_up = await followUp(response);
-      console.log('follow up')
-      // Send the source information to the user
-      bot.sendMessage(chatId, follow_up);
-    }
-  }
-});
-
-  //store messages in DB
-  if (storeUserMessage)
-    await storeMessage(supabase, {
-      user_id: user_id,
-      sender: "user",
-      text: currentMessage || "",
-    });
+//store messages in DB
+if (storeUserMessage)
+  await storeMessage(supabase, {
+    user_id: user_id,
+    sender: "user",
+    text: currentMessage || "",
+  });
   await storeMessage(supabase, {
     user_id: user_id,
     sender: "bot",
     text: response,
   });
+  await storeMessage(supabase, {
+    user_id: user_id,
+    sender: "search",
+    text: searchResult || "",
+  });
 }
 }
+
+// Handle button clicks
+async function handleCallback(bot: any, callbackQuery: CallbackQuery) {
+  if (callbackQuery.message) {
+    const message = callbackQuery.message;
+
+    const user_id = String(message.chat.id);
+    const supabase = await createSupabaseConnection();
+    const response = await getLastResponse(supabase, user_id);
+    const parsed_result = response[0].text
+
+    switch (callbackQuery.data) {
+      case 'REQUEST_AUDIO':
+        console.log('generate audio')
+        const audio_response = await generateAudio(parsed_result);
+        bot.sendVoice(message.chat.id, audio_response);
+        break;
+      case 'REQUEST_SOURCE':
+        const searchResult = await getSearchResult(supabase, user_id);
+        const parsed_search = JSON.parse(searchResult[0].text)
+        const source_response = parsed_search.link;
+        console.log('search source')
+        bot.sendMessage(message.chat.id, source_response);
+        break;
+      case 'FOLLOW_UP':
+        console.log('follow up')
+        const follow_up = await followUp(parsed_result);
+        bot.sendMessage(message.chat.id, follow_up);
+        break;
+    }
+  }
+}
+
+
 module.exports = {
   handleIncomingMessage,
+  handleCallback,
 };
