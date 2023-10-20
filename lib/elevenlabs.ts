@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 export async function generateAudio(inputText: string) {
   const API_KEY = process.env.ELEVENLABS_API_KEY;
-  const VOICE_ID = 'JXdd6WcAETjqqA8D15K8';
+  const VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 
   const options: AxiosRequestConfig = {
     method: 'POST',
