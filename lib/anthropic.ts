@@ -8,21 +8,24 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const generalContext = `You are a helpful expert at Agriculture for farmers in India. 
 Please provide your expert agriculture advice based on user context. 
-Always answer the questions in the same languages user asks. When unsure, use English.`
+First detect the language of the user input which is wrapped in <question></question> XML tag, put it in <lang></lang> tags. 
+DO NOT INCLUDE the <lang> tags in your response at any time. 
+Then formulate your response. ALWAYS wrap your response in <answer></answer> tag, using the language in <lang></lang>.`
 
 export async function createCompletions(query: string): Promise<string> {
   const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY || "",
   });
 
-  const prompt = `${Anthropic.HUMAN_PROMPT} ${generalContext} \n ${query} ${Anthropic.AI_PROMPT}`;
-
+  const prompt = `${Anthropic.HUMAN_PROMPT} ${generalContext} \n${query}\n ${Anthropic.AI_PROMPT}`;
+  console.log("chat prompt:" + prompt)
+  
   try {
     const completion = await anthropic.completions.create({
       // model: "claude-2",
       model: "claude-instant-1",
       prompt: prompt,
-      max_tokens_to_sample: 500,
+      max_tokens_to_sample: 1000,
     });
     return completion.completion;
   } catch (err) {

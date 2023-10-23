@@ -70,15 +70,19 @@ async function handleIncomingMessage(bot: any, message: Message) {
   // Check if user id exists in story
   if (story.length === 0) {
     console.log("New user");
-    bot.sendMessage(message.chat.id, "Hi, I'm AgriConnect. 🧑🏽‍🌾️");
-    bot.sendMessage(message.chat.id, "PLACE HOLDER: data consent");
-    bot.sendMessage(message.chat.id, "Reply OK to continue");
+    await bot.sendMessage(message.chat.id, "Hi, I'm AgriConnect. 🧑🏽‍🌾️");
+    await bot.sendMessage(message.chat.id, "PLACE HOLDER: data consent");
+    await bot.sendMessage(message.chat.id, "Reply OK to continue");
     storeUserMessage = false;
     await createConsent(supabase, user_id);
   } else if (story.length > 0 && story[0].firstmessagesent === false) {
-    console.log("Send Consent");
-    bot.sendMessage(message.chat.id, "Let's get started!");
-    await updateConsent(supabase, user_id);
+    console.log("Consent Granted");
+    if (currentMessage.toLowerCase().includes('ok')) {
+      bot.sendMessage(message.chat.id, "Let's get started!");
+      await updateConsent(supabase, user_id);
+    } else {
+      bot.sendMessage(message.chat.id, "Please reply with 'OK' to give your consent and continue.");
+    }
   } else {
 
     if (currentMessage.startsWith("/search")) {
@@ -94,13 +98,15 @@ async function handleIncomingMessage(bot: any, message: Message) {
       }
     } else {
       console.log("respond");
-    const chatHistory = await getChatHistory(supabase, user_id);
-    chatHistory.push({
-      user_id: user_id,
-      sender: "bot",
-      text: currentMessage,
-    });
-    response = await continueChat(chatHistory);
+      const chatHistory = await getChatHistory(supabase, user_id);
+      // console.log("history" + chatHistory);
+      response = await continueChat(chatHistory, currentMessage);
+
+      chatHistory.push({
+        user_id: user_id,
+        sender: "user",
+        text: currentMessage,
+      });
     }
     // const img_prompt = response.match(/<en>(.*?)<\/en>/)?.[1] || "";
 
@@ -110,7 +116,12 @@ async function handleIncomingMessage(bot: any, message: Message) {
     // const img = await generateImage(response);
     // bot.sendPhoto(message.chat.id, img[0]);
 
-  bot.sendMessage(message.chat.id, response).then(() => {
+  const answerMatch = response.match(/<answer>(.*?)<\/answer>/s);
+  let answer = answerMatch ? answerMatch[1] : response;
+  answer = answer.replace(/<lang>(.*?)<\/lang>/g, '');
+  answer = answer.replace(/<[^>]*>/g, '');
+  
+  bot.sendMessage(message.chat.id, answer).then(() => {
     // Define the menu items
     const audioRequestButton: InlineKeyboardButton = {
       text: '👂 Click to listen',
@@ -133,7 +144,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
     };
 
     // Send a message with the keyboard
-    bot.sendMessage(message.chat.id, 'more options:',{
+    bot.sendMessage(message.chat.id, '.',{
       reply_markup: keyboard
     });
   });
@@ -179,12 +190,12 @@ async function handleCallback(bot: any, callbackQuery: CallbackQuery) {
         const parsed_search = JSON.parse(searchResult[0].text)
         const source_response = parsed_search.link;
         console.log('search source')
-        bot.sendMessage(message.chat.id, source_response);
+        bot.sendMessage(message.chat.id, source_response.replace(/<[^>]*>/g, ''));
         break;
       case 'FOLLOW_UP':
         console.log('follow up')
         const follow_up = await followUp(parsed_result);
-        bot.sendMessage(message.chat.id, follow_up);
+        bot.sendMessage(message.chat.id, follow_up.replace(/<[^>]*>/g, ''));
         break;
     }
   }
