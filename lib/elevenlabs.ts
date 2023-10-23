@@ -19,7 +19,11 @@ export async function generateAudio(inputText: string) {
     responseType: 'arraybuffer',
   };
 
-  const speechDetails = await axios.request(options);
-  console.log('audio generated')
-  return speechDetails.data;
+  try {
+    const speechDetails = await axios.request(options);
+    console.log('audio generated')
+    return speechDetails.data;
+  } catch (error) {
+    console.error('Error generating audio:', error);
+  }
 };
