@@ -2,6 +2,7 @@
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
 // import { SupabaseHybridSearch } from "langchain/retrievers/supabase";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { ScoreThresholdRetriever } from "langchain/retrievers/score_threshold";
 import { createClient } from "@supabase/supabase-js";
 // import fs from 'fs';
 // import path from 'path';
@@ -44,11 +45,10 @@ export async function search(query: string)  {
       {
         client,
         tableName: "documents",
-        queryName: "match_documents",
+        // queryName: "match_documents",
+        queryName: "match_schemes",
       }
     );
-
-    // const resultOne = await vectorStore.similaritySearch(query, 1);
 
     // const retriever = new SupabaseHybridSearch(embeddings, {
     //   client,
@@ -60,18 +60,27 @@ export async function search(query: string)  {
     //   keywordQueryName: "kw_match_documents",
     // });
     
-    // const resultOne = await retriever.getRelevantDocuments(query);
-    const resultOne = await vectorStore.similaritySearch(query, 3);
-    // const resultOne = await retriever.keywordSearch(query, 10);
+   
+    const retriever = ScoreThresholdRetriever.fromVectorStore(vectorStore, {
+      minSimilarityScore: 0.7, // Finds results with at least this similarity score
+      maxK: 10, // The maximum K value to use. Use it based to your chunk size to make sure you don't run out of tokens
+      kIncrement: 2, // How much to increase K by each time. It'll fetch N results, then N + kIncrement, then N + kIncrement * 2, etc.
+    });
 
-    // console.log(resultOne)
+    const resultOne = await retriever.getRelevantDocuments(query);
+
+
+    // const resultOne = await vectorStore.maxMarginalRelevanceSearch(query,{ k: 5 });
     
-    const search_response = {
-        name: resultOne[0].metadata.scheme_name,
-        // benefits: resultOne[0].metadata.benefits,
-        link: resultOne[0].metadata.url,
-        pageContent: resultOne[0].pageContent
-    }
+    const search_response = resultOne.map(item => {
+      return {
+        name: item.metadata.scheme_name,
+        link: item.metadata.url,
+        pageContent: item.pageContent
+      };
+    });
+
+    console.log(search_response)
 
     return search_response;
   } catch (error) {
