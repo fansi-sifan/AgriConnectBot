@@ -6,7 +6,7 @@ import Anthropic from "@anthropic-ai/sdk";
 // start beginning of story
 
 // conversation
-// generate key themes & store key themes
+// generate key themes & store key themesß
 
 interface ChatMessage {
   user_id: string;
@@ -14,13 +14,15 @@ interface ChatMessage {
   text: string;
 }
 
-import { createCompletions } from "./anthropic"
+import { createCompletions } from "./anthropic";
 import { createCompletionsHL } from "./humanloop";
 
-export async function continueChat(userChatHistory: ChatMessage[], currentMessage: string) {
-  
-  let chatString = ""
-  
+export async function continueChat(
+  userChatHistory: ChatMessage[],
+  currentMessage: string
+) {
+  let chatString = "";
+
   if (userChatHistory.length > 0) {
     for (let i = 0; i < userChatHistory.length; i++) {
       let chat = userChatHistory[i];
@@ -45,15 +47,14 @@ export async function continueChat(userChatHistory: ChatMessage[], currentMessag
   chatString += `${Anthropic.HUMAN_PROMPT} <question>${currentMessage}</question>\n`;
 
   const completion = await createCompletions(chatString); // use Anthropic
-  
+
   // const completion = await createCompletionsHL(chatString); // use HumanLoop
   return completion;
 }
 
 export async function followUp(context: string) {
-
   const qa_prompt = `Suggest three follow up questions to: <context>${context}</context>`;
-  
+
   const prompt = `${Anthropic.HUMAN_PROMPT} ${qa_prompt}`;
 
   const completion = await createCompletions(prompt); // use Anthropi
@@ -62,22 +63,24 @@ export async function followUp(context: string) {
 }
 
 export async function summarizeText(query: string, context: string) {
-
   const sum_prompt = `This is an external knowledge source for you:  
   <context> ${context} </context>
 
-  First, think how the knowledge source is relevant to user question, put your thoughts in <thoughts></thoughts> tags.
-  DO NOT INCLUDE the <thoughts> tags it in your response.
+  First, think how the knowledge source is relevant to user question, pay attention to the types of crops and the geography it covers.
+  put your thoughts in <thoughts></thoughts> tags.
 
-  If the context does not provide relevant information to user question, Say "Sorry, I couldn't find the relevant answer." 
+  Use your thoughts to formulate your anwer. 
+  If the context does not provide relevant information to user question, or the region is not matching, or the crop is not matching,
+  Say "Sorry, I couldn't find the relevant answer." 
+  
   Otherwise, Answer the user question in English with no more than 5 sentences.
   <question> ${query}. </question>.`;
 
   const prompt = `${Anthropic.HUMAN_PROMPT} ${sum_prompt}`;
 
-  const completion = await createCompletions(prompt); // use Anthropi
+  const completion = await createCompletions(prompt); // use Anthropic
+
+  console.log("search summary: " + completion);
   // const completion = await createCompletionsHL(chatString); // use HumanLoop
   return completion;
 }
-
-
