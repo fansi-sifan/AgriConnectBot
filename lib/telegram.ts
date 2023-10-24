@@ -127,7 +127,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
     const answerMatch = response.match(/<answer>(.*?)<\/answer>/s);
     let answer = answerMatch ? answerMatch[1] : response;
     answer = answer.replace(/<lang>(.*?)<\/lang>/g, "");
-    answer = answer.replace(/<thought>(.*?)<\/thought>/g, "");
+    answer = answer.replace(/<thoughts>(.*?)<\/thoughts>/g, "");
     answer = answer.replace(/<[^>]*>/g, "");
 
     bot.sendMessage(message.chat.id, answer).then(() => {
@@ -149,7 +149,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
 
       // Create the keyboard
       const keyboard: InlineKeyboardMarkup = {
-        inline_keyboard: currentMessage.startsWith("/search")
+        inline_keyboard: searchResult.length > 0
           ? [[audioRequestButton, sourceRequestButton]]
           : [[audioRequestButton, followUpButton]],
       };
