@@ -170,7 +170,7 @@ async function handleIncomingMessage(bot: any, message: Message) {
     await storeMessage(supabase, {
       user_id: user_id,
       sender: "bot",
-      text: response,
+      text: answer || "", 
     });
     await storeMessage(supabase, {
       user_id: user_id,
@@ -184,6 +184,8 @@ async function handleIncomingMessage(bot: any, message: Message) {
 async function handleCallback(bot: any, callbackQuery: CallbackQuery) {
   if (callbackQuery.message) {
     const message = callbackQuery.message;
+
+    console.log('callback')
 
     const user_id = String(message.chat.id);
     const supabase = await createSupabaseConnection();
