@@ -1,7 +1,19 @@
 # Agriconnect: Empowering Smallholder Farmers with Multimodal AI Knowledge
 
-![Agriconnect Logo](link-to-your-logo.png)
+![Agriconnect Logo](/images/logo.jpeg)
 
+## Demo
+Generate answer from retrieved content from internal database
+![Generate answer from retrieved content from internal database](/images/demo1.png)
+
+
+Evaluate if RAG results are relevant
+![Evaluate if RAG results are relevant](/images/demo2.png)
+
+Answer in the same user language
+![Answer in the same user language](/images/demo3.png)
+
+## Background
 Agriconnect is an innovative AI-powered platform designed to empower smallholder farmers by providing them with critical agricultural knowledge and resources. We aim to break down barriers to access and comprehension, enabling knowledge institutions to interact directly with farmers and communities, offering not only farming practice advice but also guidance on accessing financing, adopting technology, and expanding market access.
 
 This repository hosts the codebase and resources for Agriconnect. The project aligns with the Sustainable Development Goals (SDGs) set by the United Nations, particularly focusing on:
