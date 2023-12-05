@@ -55,12 +55,14 @@ async function handleIncomingMessage(bot: any, message: Message) {
     console.log("audio:" + transcription);
     currentMessage = transcription;
   } else if (message.photo) {
-    const { generateImage } = require("./imgGen");
+    // const { generateImage } = require("./imgGen");
+    const { readImg } = require("./readImg");
     const fileId = message.photo[0].file_id;
     const caption = message.caption || "";
 
     const fileUrl: string = await bot.getFileLink(fileId);
-    const imgMessage = await generateImage(fileUrl, caption);
+    // const imgMessage = await generateImage(fileUrl, caption);
+    const imgMessage = await readImg(fileUrl, caption);
     bot.sendMessage(message.chat.id, imgMessage);
     currentMessage =
       caption +
