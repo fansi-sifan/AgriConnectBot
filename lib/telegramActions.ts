@@ -69,7 +69,7 @@ export async function summarizeText(query: string, context: string) {
   First, think how the knowledge source is relevant to user question, pay attention to the types of crops and the geography it covers.
   put your thoughts in <thoughts></thoughts> tags.
 
-  Use your thoughts to formulate your anwer. 
+  Use your thoughts to formulate your answer. 
   If the context does not provide relevant information to user question, or the region is not matching, or the crop is not matching,
   Say "Sorry, I couldn't find the relevant answer." 
   
