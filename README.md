@@ -29,6 +29,7 @@ This repository hosts the codebase and resources for Agriconnect. The project al
 - **Multimodal AI Knowledge:** Agriconnect provides information in a variety of formats, making it accessible to a wide audience through text, images, and voice.
 - **Interactive Local Language Content:** Knowledge institutions can convert their expertise into locally relevant content, breaking down language barriers.
 - **Promoting Sustainability:** Agriconnect contributes to reducing environmental strain, combating resource-intensive farming, and fostering sustainable livelihoods for smallholder farmers.
+- **Link** to video demo <https://www.youtube.com/watch?v=sPx3uQi4nG0>, and play around with the Telegram bot prototype <https://t.me/agriconnect_bot>.
 
 ## Tech Stack
 
