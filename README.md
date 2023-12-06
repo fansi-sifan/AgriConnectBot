@@ -3,15 +3,16 @@
 ![Agriconnect Logo](/images/logo.jpeg)
 
 ## Demo
-Generate answer from retrieved content from internal database
-![Generate answer from retrieved content from internal database](/images/demo1.png)
-
-
-Evaluate if RAG results are relevant
-![Evaluate if RAG results are relevant](/images/demo2.png)
-
-Answer in the same user language
-![Answer in the same user language](/images/demo3.png)
+<table>
+  <tr>
+    <td><img src="/images/demo1.png" alt="Generate answer from retrieved content from internal database"></td>
+    <td><img src="/images/demo2.png" alt="Evaluate if RAG results are relevant"></td>
+  </tr>
+  <tr>
+    <td><img src="/images/demo3.png" alt="Answer in the same user language"></td>
+    <td><img src="/images/demo4.png" alt="Crop disease recognition"></td>
+  </tr>
+</table>
 
 ## Background
 Agriconnect is an innovative AI-powered platform designed to empower smallholder farmers by providing them with critical agricultural knowledge and resources. We aim to break down barriers to access and comprehension, enabling knowledge institutions to interact directly with farmers and communities, offering not only farming practice advice but also guidance on accessing financing, adopting technology, and expanding market access.
@@ -35,11 +36,10 @@ AI models:
 - OpenAI whisper-1
 - Anthropic claude-instant-1
 - ElevenLabs: eleven_multilingual_v2
-- Llava 13b
+- OpenAI GPT4-Vision
 
 AI dev tools: 
 - Supabase: vector database for RAG
-- Replicate: Used for generating images
 - Humanloop: prompt management and quality evaluation
 
 Infrastructure
@@ -50,24 +50,6 @@ Infrastructure
 
 ## Getting Started
 
-To get started with Agriconnect, follow the installation and usage instructions in our [documentation](link-to-documentation).
-
-## Contributing
-
-We welcome contributions from the open-source community to help us improve and expand Agriconnect. If you're interested in contributing, please read our [Contribution Guidelines](link-to-contributing).
-
-## Support
-
-If you encounter any issues or have questions, please open a [GitHub issue](link-to-issues) or reach out to our team at [support@agriconnect.com](mailto:support@agriconnect.com).
-
-## License
-
-This project is licensed under the [MIT License](link-to-license) - see the [LICENSE](link-to-license) file for details.
-
-## Acknowledgments
-
-Agriconnect would like to thank all contributors and supporters for their efforts in empowering smallholder farmers and promoting sustainable agriculture.
-
----
-
-**Agriconnect** is developed and maintained by [Your Organization Name](link-to-your-website).
+1. Download git and run npm install
+2. Rename .env.example to .env and fill in the API keys
+3. Go to your terminal and run npx nodemon index.ts
