@@ -32,17 +32,17 @@ This repository hosts the codebase and resources for Agriconnect. The project al
 
 ## Tech Stack
 
-AI models: 
+### AI models: 
 - OpenAI whisper-1
 - Anthropic claude-instant-1
 - ElevenLabs: eleven_multilingual_v2
 - OpenAI GPT4-Vision
 
-AI dev tools: 
+### AI dev tools: 
 - Supabase: vector database for RAG
 - Humanloop: prompt management and quality evaluation
 
-Infrastructure
+### Infrastructure
 - Node.js
 - TypeScript
 - Langchain
