@@ -50,6 +50,6 @@ This repository hosts the codebase and resources for Agriconnect. The project al
 
 ## Getting Started
 
-1. Download git and run npm install
-2. Rename .env.example to .env and fill in the API keys
-3. Go to your terminal and run npx nodemon index.ts
+1. Download git and run `npm install`
+2. Rename `.env.example` to `.env` and fill in the API keys
+3. Go to your terminal and run `npx nodemon index.ts`
